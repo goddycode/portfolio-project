@@ -20,7 +20,8 @@ export const signup = (fname, lname, email, password) => async (dispatch) => {
       },
     };
     const { data } = await axios.post(
-      "api/users/register/",
+      `/api/users/register/`,
+
       {
         fname: fname,
         lname: lname,
@@ -50,14 +51,14 @@ export const login = (email, password) => async (dispatch) => {
       type: USER_LOGIN_REQUEST,
     });
     const config = {
-      Headers: {
+      headers: {
         "Content-type": "application/json",
       },
     };
     const { data } = await axios.post(
-      "api/users/login/",
+      `/api/users/login/`,
       {
-        email: email,
+        username: email,
         password: password,
       },
       config
@@ -66,7 +67,8 @@ export const login = (email, password) => async (dispatch) => {
       type: USER_LOGIN_SUCCESS,
       payload: data,
     });
-    //localStorage.setItem("userInfo", JSON.stringify(data));
+
+    localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,
@@ -76,4 +78,9 @@ export const login = (email, password) => async (dispatch) => {
           : error.message,
     });
   }
+};
+
+export const logout = () => (dispatch) => {
+  localStorage.removeItem("userInfo");
+  dispatch({ type: USER_LOGOUT });
 };

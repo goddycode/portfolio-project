@@ -2,8 +2,17 @@ import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../actions/userActions";
 
 function Header() {
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const dispatch = useDispatch();
+
+  const logoutHandler = () => {
+    dispatch(logout());
+  };
   return (
     <>
       <Navbar
@@ -60,27 +69,42 @@ function Header() {
                   </NavLink>
                 </div>
               </li>
-              <li className="nav-item dropdown">
-                <NavLink
-                  to="/signup"
-                  className="nav-link dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                >
-                  New User?
-                </NavLink>
-                <div className="dropdown-menu">
-                  <NavLink to="/login" className="dropdown-item">
-                    Login
+              {userInfo ? (
+                <li className="nav-item dropdown">
+                  <NavLink
+                    to="/"
+                    className="nav-link dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                  >
+                    Welcome {userInfo.name}
                   </NavLink>
-                  <NavLink to="/signup" className="dropdown-item">
-                    Signup
+                  <div className="dropdown-menu">
+                    <NavLink to="/logout">
+                      <a className="dropdown-item" onClick={logoutHandler}>
+                        Logout
+                      </a>
+                    </NavLink>
+                  </div>
+                </li>
+              ) : (
+                <li className="nav-item dropdown">
+                  <NavLink
+                    to="/signup"
+                    className="nav-link dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                  >
+                    New User?
                   </NavLink>
-                  <div className="dropdown-divider"></div>
-                  <a className="dropdown-item" href="#">
-                    Logout
-                  </a>
-                </div>
-              </li>
+                  <div className="dropdown-menu">
+                    <NavLink to="/login" className="dropdown-item">
+                      Login
+                    </NavLink>
+                    <NavLink to="/signup" className="dropdown-item">
+                      Signup
+                    </NavLink>
+                  </div>
+                </li>
+              )}
             </ul>
             <form className="d-flex">
               <input
